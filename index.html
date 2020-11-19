@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Compass BCA</title>
+	<link rel="icon" href="image/title-img.png" type="image/icon type" >
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<style type="text/css">
+	html,body{
+		height: 100%;
+	}
+	.mastercontainer{
+		margin: 40px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+
+	
+	}
+	img{
+		width: 800px;
+		height: 600px;
+	}
+	.form-style{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 50%;
+	}
+	.btn{
+		margin-bottom: 20px;
+	}
+	.btn:active {
+		background-color: #3e8e41;
+		box-shadow: 0 5px #666;
+		transform: translateY(4px);
+	}
+	.bg-blue{
+		background-color: #0069DA;
+	}
+	.navbar-brand{
+		color: white !important;
+	}
+	.wrap {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -100px;
+	}
+	.push{
+	height: 60px;
+	}
+	.footer{
+		height: 100px;
+		background-color: #0060AF;
+	}
+
+</style>
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+<script>
+	$(document).ready(function(){
+		$.ajax({
+				type: 'GET',
+				url: 'http://bit-scrum.herokuapp.com/public/api/employees',
+				success: function(data){
+					newTable(data);
+				}
+		});
+        
+
+		$("#myInput").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#myTable tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+
+		function newTable(data) {
+			
+			var dictData = data.result;
+			$(dictData).each(function(no){
+				var nama=dictData[no].FULL_NAME;
+				var lokasi=dictData[no].seat.BUILDING_NAME+" Lantai "+dictData[no].seat.FLOOR;
+				var lokasihref=dictData[no].seat.BUILDING_NAME+dictData[no].seat.FLOOR;
+				var nip=dictData[no].NIP;
+				var group=dictData[no].group.GROUP_INITIAL;
+				var kursi= dictData[no].seat.SEAT_NAME;
+				$("#myTable").append("<tr><td><a href='map.html?NIP="+nip+"&map="+lokasihref+"'>"+nama+"</a></td><td>"+lokasi+"</td><td>"+group+"</td><td>"+kursi+"</td></tr>");
+            });
+        }
+	});
+</script>
+
+</head>
+<body>
+	<div class="wrap">
+
+		<nav class="navbar navbar-light" style="background-color: #ffffff; border-bottom: 3px solid #77b3e4;">
+			<a class="navbar-brand" href="index.html">
+				<img src="image/logo.png" alt="" style="height: 40px; width: 200px;" class="rounded">
+			</a>
+		</nav>
+		<div class="mastercontainer">
+			<div style="width:300px;" class="form-style">
+
+				<button onclick="searchByName();" class="btn btn-primary" style="padding: 20% 0; font-size: 36px;" ><i class="fas fa-user-friends"></i> By Name</button>
+				<button onclick="searchByFloor();" class="btn btn-primary" style="padding: 20% 0; font-size: 36px;"><i class="far fa-building"></i> By Floor</button>
+
+			</div>
+
+			<div style="width: 60%;">
+				<div id="searchByName" style="display: none; margin-bottom: 10px; margin-left: 10px;">
+					<form>
+						<!-- <input type="text" name="name" class="form-control" style="margin-bottom: 20px;" placeholder="Search..."> -->
+						<input id="myInput" type="text" class="form-control" style="margin-bottom: 20px;" placeholder="Search..">
+					</form>
+					<div class="list-group" style="width: 100%;">
+						<table>
+							<thead>
+							<tr>
+								<th>Nama</th>
+								<th>Lokasi</th>
+								<th>Group</th>
+								<th>Kursi</th>
+							</tr>
+							</thead>
+							<tbody id="myTable">
+							</tbody>
+						  </table>
+
+					</div>
+				</div>
+				<div id="searchByFloor" style="display: none; margin-bottom: 10px; margin-left: 10px;">
+					<div class="list-group" style="width: 100%;">
+						<div class="list-group-item list-group-item-action flex-column align-items-start">
+							<div class="d-flex w-100 justify-content-between">
+								<h5 class="mb-1">Menara BCA</h5>
+							</div>
+							<a class="btn btn-primary" href="map.html?map=mbca15">Lt 15</a>
+							<a class="btn btn-primary" href="map.html?map=mbca33">Lt 33</a>
+						</div>
+						<div class="list-group-item list-group-item-action flex-column align-items-start">
+							<div class="d-flex w-100 justify-content-between">
+								<h5 class="mb-1">Wisma Asia</h5>
+							</div>
+							<a class="btn btn-primary" href="map.html?map=wsa12">Lt 12</a>
+						</div>
+					</div>
+				</div>
+				<div id="searchByFloor1" style="display: block; margin-left: 10px;">
+					<div class="imageView" style="width: 100%;">
+						<!-- <img src="image/main-image.jpg" class="img-fluid rounded" alt="Responsive image" style="height: 350px;"> -->
+						<div id="demo" class="carousel slide" data-ride="carousel">
+
+							<!-- Indicators -->
+							<ul class="carousel-indicators">
+							  <li data-target="#demo" data-slide-to="0" class="active"></li>
+							  <li data-target="#demo" data-slide-to="1"></li>
+							  <li data-target="#demo" data-slide-to="2"></li>
+							</ul>
+							
+							<!-- The slideshow -->
+							<div class="carousel-inner">
+							  <div class="carousel-item active">
+								<img class="img-fluid rounded"  src="image/image1.jpg" alt="Los Angeles" style="height: 350px;">
+							  </div>
+							  <div class="carousel-item">
+								<img class="img-fluid rounded" src="image/image2.jpg" alt="Chicago"  style="height: 350px;">
+							  </div>
+							  <div class="carousel-item">
+								<img class="img-fluid rounded" src="image/image3.jpg" alt="New York"  style="height: 350px;">
+							  </div>
+							</div>
+							
+							<!-- Left and right controls -->
+							<a class="carousel-control-prev" href="#demo" data-slide="prev">
+							  <span class="carousel-control-prev-icon"></span>
+							</a>
+							<a class="carousel-control-next" href="#demo" data-slide="next">
+							  <span class="carousel-control-next-icon"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="push"></div>
+	</div>
+
+	<!-- footer -->
+	<div class="footer text-right">
+		<div class="container align-middle">
+			<div class="row">
+				<div class="col-sm"></div>
+				<div class="col-sm" style="display:flex">
+					<img src="image/footer/fot-1.png" style="height: 60px; width: 60px; position: relative;" class="mr-5 mt-3">
+					<img src="image/footer/fot-1.png" style="height: 60px; width: 60px;  position: relative;" class="mr-5 mt-3">
+					<img src="image/footer/fot-1.png" style="height: 60px; width: 60px;  position: relative;" class="mr-5 mt-3">
+					<img src="image/footer/fot-1.png" style="height: 60px; width: 60px;  position: relative;" class="mr-5 mt-3">
+				</div>
+				<div class="col-sm">
+					
+				</div>
+			</div>
+		</div>
+		
+  	</div>
+
+	<script>
+
+		function searchByName()
+		{
+			document.getElementById("searchByName").style.display = 'block';
+			document.getElementById("searchByFloor").style.display = 'none';
+			document.getElementById("searchByFloor1").style.display = 'none';
+
+		}
+
+		function searchByFloor()
+		{
+			document.getElementById("searchByName").style.display = 'none';
+			document.getElementById("searchByFloor").style.display = 'block';
+			document.getElementById("searchByFloor1").style.display = 'none';
+
+		}
+
+	</script>
+</body>
+
+</html>

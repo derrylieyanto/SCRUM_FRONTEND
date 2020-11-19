@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Denah</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<style type="text/css">
+    .containerimage {
+    position:relative;
+}
+#circle {
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+
+}
+	.mastercontainer{
+		margin: 40px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+	img{
+		width: 800px;
+		height: 600px;
+	}
+	.form-style{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 50%;
+	}
+	.btn{
+		margin-bottom: 20px;
+	}
+	.bg-blue{
+		background-color: #0069DA;
+	}
+	.navbar-brand{
+		color: white !important;
+	}
+	body{
+        background:#DCDCDC;
+
+    }
+    .card-box {
+        padding: 20px;
+        border-radius: 3px;
+        margin-bottom: 30px;
+        background-color: #fff;
+    }
+
+    .social-links li a {
+        border-radius: 50%;
+        color: rgba(121, 121, 121, .8);
+        display: inline-block;
+        height: 30px;
+        line-height: 27px;
+        border: 2px solid rgba(121, 121, 121, .5);
+        text-align: center;
+        width: 30px
+    }
+
+    .social-links li a:hover {
+        color: #797979;
+        border: 2px solid #797979
+    }
+    .thumb-lg {
+        height: 88px;
+        width: 88px;
+    }
+    .img-thumbnail {
+        padding: .25rem;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: .25rem;
+        max-width: 100%;
+        height: auto;
+    }
+    .text-pink {
+        color: #ff679b!important;
+    }
+    .btn-rounded {
+        border-radius: 2em;
+    }
+    .text-muted {
+        color: #98a6ad!important;
+    }
+    h4 {
+        line-height: 22px;
+        font-size: 18px;
+    }
+
+    .blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+</style>
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+     function GetURLParameter(sParam){
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++)
+        {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam)
+            {
+                return sParameterName[1];
+            }
+        }
+     }
+
+    //  get data by NIP
+     function GetData(){
+         var val = GetURLParameter("NIP");
+
+        //  inisialisasi
+        var $namas = $('#namaPegawai');
+        var $nips = $('#nipPegawai');
+        var $groups = $('#groupPegawai');
+        var $lokasis = $('#lokasiPegawai');
+        var $kursis = $('#kursiPegawai');
+         
+        //  Request by NIP
+         $.ajax({
+				type: 'GET',
+				url: 'http://bit-scrum.herokuapp.com/public/api/employee/'+val,
+				success: function(data){
+                    $namas.append(data.result.FULL_NAME)
+                    $nips.append(data.result.NIP)
+                    $groups.append(data.result.group.GROUP_INITIAL)
+                    $lokasis.append(data.result.seat.BUILDING_NAME)
+                    $kursis.append(data.result.seat.SEAT_NAME)
+
+                    // Warna titik
+                    var el = document.getElementById("circle");
+                    el.style.top =  data.result.seat.COORD_Y + 5 + 'px';
+                    el.style.left = data.result.seat.COORD_X + 20 + 'px';
+                    if(data.result.group.GROUP_INITIAL=="APT")
+                    {
+                        el.style.backgroundColor = "#A93FBA";
+                    }
+                    else if(data.result.group.GROUP_INITIAL=="IIO"){
+                        el.style.backgroundColor = "#043772";
+                    }
+                    else if(data.result.group.GROUP_INITIAL=="DMO"){
+                        el.style.backgroundColor = "#00BA13";
+                    }
+                    else if(data.result.group.GROUP_INITIAL=="GAQ"){
+                        el.style.backgroundColor = "#FFC90A";
+                    }
+                    else if(data.result.group.GROUP_INITIAL=="DIS"){
+                        el.style.backgroundColor = "#FF814B";
+                    }
+                    
+				}
+		});
+
+     }
+
+   
+
+
+
+    function change_location()
+    {
+        var val=GetURLParameter("map");
+        document.getElementById("image").style.display = "block";
+        if(val=="mbca15")
+        {
+            document.getElementById("image").src="MBCA15.JPG";
+        }
+        else if(val=="mbca33")
+        {
+
+            document.getElementById("image").src="MBCA33.JPG";
+        }
+        else if(val="wsa12b")
+        {
+            document.getElementById("image").src="WSA12.JPG";   
+        }
+    }
+   
+
+</script>
+
+<body onload="change_location();GetData();">
+
+	<nav class="navbar navbar-light bg-blue">
+       <a class="navbar-brand" href="index.html">Denah Tempat Duduk BCA</a>
+   </nav>
+
+
+   <div class="mastercontainer">
+      <div class="containerimage">
+          <div class="container">
+            <img id="image" style="display: none;">
+            <div id="circle" class="blink_me"></div>
+          </div>
+     </div>
+
+
+     <div class="col-lg-4" id="profile-card">
+        <div class="text-center card-box">
+            <div class="member-card pt-2 pb-2">
+                <div class="thumb-lg member-thumb mx-auto"><img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle img-thumbnail" alt="profile-image"></div>
+                <div class="">
+                    <h4 id="namaPegawai"></h4>
+                    <p id="nipPegawai" class="text-muted" ></p>
+                </div>
+
+                <button type="button" class="btn btn-primary mt-3 btn-rounded waves-effect w-md waves-light">Message Now</button>
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="mt-3">
+                                <h4>Group</h4>
+                                <p id="groupPegawai" class="mb-0 text-muted"></p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="mt-3">
+                                <h4>Lokasi</h4>
+                                <p id="lokasiPegawai" class="mb-0 text-muted"></p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="mt-3">
+                                <h4>Kursi</h4>
+                                <p id="kursiPegawai" class="mb-0 text-muted"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+  function searchByName()
+  {
+     document.getElementById("searchByName").style.display = 'block';
+     document.getElementById("searchByFloor").style.display = 'none';
+ }
+
+ function searchByFloor()
+ {
+     document.getElementById("searchByName").style.display = 'none';
+     document.getElementById("searchByFloor").style.display = 'block';
+ }
+</script>
+
+
+
+</body>
+
+</html>
